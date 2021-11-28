@@ -31,5 +31,4 @@ persons = [["Mario Speedwagon", "7982 Schoolhouse Street, Hagerstown, MD 21740",
 conn, cur = create_connection("person")
 create_persons_table(conn, cur)
 for person in persons:
-    print(person)
     insert_person_values(person[0], person[1], person[2], conn, cur)

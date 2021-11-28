@@ -1,18 +1,19 @@
 import sqlite3
 import io
 import csv
-
+import glob
+import fnmatch
 import person_service
 from flask import (
     Flask,
-    render_template,
-    Blueprint,
-    jsonify,
-    make_response,
-    request,
     flash,
+    jsonify,
+    request,
     url_for,
     redirect,
+    Blueprint,
+    make_response,
+    render_template,
 )
 
 
@@ -30,12 +31,26 @@ def show_persons():
     return render_template("index.html", persons=get_all_person_data())
 
 
+@person_page.route("/api/filter_names", methods=["GET", "POST"])
+def filter_names():
+    filter_pattern = request.form["filter-names"]
+    db_name = "person"
+    conn, cur = create_connection(db_name)
+    
+    list_basic_person_dto = person_service.get_all_person_data(cur)
+    list_ids = [
+        basic_person_dto.id
+        for basic_person_dto in list_basic_person_dto
+        if fnmatch.fnmatch(basic_person_dto.name, filter_pattern)
+    ]
+    return render_template("index.html", persons=get_person_by_ids(list_ids))
+
+
 @person_page.route("/api/create_person_data", methods=["POST"])
 def create_person_data():
 
     db_name = "person"
     conn, cur = create_connection(db_name)
-    # Read Values
     person = (
         request.form["person-name"],
         request.form["person-address"],
@@ -69,15 +84,23 @@ def delete_person_data(person_id):
     return redirect(url_for("person_page.show_persons"))
 
 
+@person_page.route("/api/get_person_by_ids", methods=["GET"])
+def get_person_by_ids(ids):
+
+    db_name = "person"
+    conn, cur = create_connection(db_name)
+
+    list_basic_person_dto = person_service.get_person_by_ids(ids, cur)
+    return list_basic_person_dto
+
+
 @person_page.route("/api/get_all_person_data", methods=["GET"])
 def get_all_person_data():
 
     db_name = "person"
     conn, cur = create_connection(db_name)
 
-    # Read Values
     list_basic_person_dto = person_service.get_all_person_data(cur)
-    print(list_basic_person_dto)
     return list_basic_person_dto
 
 
@@ -87,9 +110,7 @@ def get_all_person_data_json():
     db_name = "person"
     conn, cur = create_connection(db_name)
 
-    # Read Values
     list_basic_person_dto = person_service.get_all_person_data(cur)
-    print(list_basic_person_dto)
     return jsonify(list_basic_person_dto)
 
 
@@ -100,7 +121,6 @@ def get_all_person_data_csv():
     conn, cur = create_connection(db_name)
 
     list_basic_person_dto = person_service.get_all_person_data(cur)
-    # print(list_basic_person_dto)
     si = io.StringIO()
 
     cw = csv.writer(si)

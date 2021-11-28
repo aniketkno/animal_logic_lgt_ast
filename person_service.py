@@ -17,6 +17,11 @@ def get_all_person_data(cur):
     list_basic_persons = list(map(create_basic_person_dto, persons))
     return list_basic_persons
 
+def get_person_by_ids(id, cur):
+    persons = person_repository.get_person_by_ids(id, cur)
+    list_basic_persons = list(map(create_basic_person_dto, persons))
+    return list_basic_persons
+
 
 def create_basic_person_dto(person):
     basic_person = IBasicPersonDTO.IBasicPersonDTO(

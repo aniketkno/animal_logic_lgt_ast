@@ -9,10 +9,9 @@ def create_persons_table(conn, cur):
     conn.commit()
 
 
-def delete_persons(ids, conn, cur):
+def delete_persons(person_ids, conn, cur):
     # Insert Values
-    print("DELETE FROM person WHERE id IN ({0})".format(",".join(ids)))
-    cur.execute("DELETE FROM person WHERE id IN ({0})".format(",".join(ids)))
+    cur.execute("DELETE FROM person WHERE id IN ({0})".format(",".join(person_ids)))
     conn.commit()
 
 
@@ -28,6 +27,9 @@ def get_all_person_data(cur):
     return cur.fetchall()
 
 
-def get_person_by_id(id, cur):
-    cur.execute("SELECT * FROM person WHERE id in ({})".format(",".join(id)))
+def get_person_by_ids(person_ids, cur):
+    if person_ids:
+        cur.execute("SELECT * FROM person WHERE id in ({0})".format(",".join([str(id) for id in person_ids])))
+    else:
+        cur.execute("SELECT * FROM person")
     return cur.fetchall()
