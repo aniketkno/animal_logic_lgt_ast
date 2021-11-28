@@ -1,11 +1,9 @@
 import sqlite3
 import io
 import csv
-import glob
 import fnmatch
 import person_service
 from flask import (
-    Flask,
     flash,
     jsonify,
     request,

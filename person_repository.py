@@ -1,6 +1,3 @@
-import sqlite3
-
-
 def create_persons_table(conn, cur):
     # Create database
     cur.execute(
