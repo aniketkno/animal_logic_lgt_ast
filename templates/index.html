@@ -13,10 +13,9 @@
         </ul>
         <br>
         <form action="/api/filter_names" method="POST">
-            <div>
+            <div style="display:inline">
                 Filter: <input type="text" name="filter-names">
             </div>
-            <br>
             <input type="submit" value="Apply Filter">
         </form>
 
@@ -25,8 +24,8 @@
         {% for person in persons %}
         <div>
             <form action="/api/delete_person_data/{{person.id}}">
-                <input type="submit" value="x">
-                <ul>{{person.id}}__{{person.name}}___________{{person.address}}___________{{person.phone}}</ul>
+                <input type="submit" value="x" style="display:inline">
+                <li style="display:inline">{{person.id}}__{{person.name}}___________{{person.address}}___________{{person.phone}}</ul>
             </form>
         </div>
         {% endfor %}

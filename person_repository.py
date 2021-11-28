@@ -22,14 +22,19 @@ def insert_person_values(name, address, number, conn, cur):
 
 
 def get_all_person_data(cur):
-    # Read Values
+    # Read All Values
     cur.execute("SELECT * FROM person")
     return cur.fetchall()
 
 
 def get_person_by_ids(person_ids, cur):
+    # gets rows by ids or everything
     if person_ids:
-        cur.execute("SELECT * FROM person WHERE id in ({0})".format(",".join([str(id) for id in person_ids])))
+        cur.execute(
+            "SELECT * FROM person WHERE id in ({0})".format(
+                ",".join([str(id) for id in person_ids])
+            )
+        )
     else:
         cur.execute("SELECT * FROM person")
     return cur.fetchall()
